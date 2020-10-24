@@ -34,6 +34,7 @@ const Chart = ({ data, country }) => {
     };
     const lineChart = dailyData.length ? (<Line data={lineData} />) : null;
 
+
     const barData = {
         labels: ['Infected', 'Recovered', 'Deaths'],
         datasets: [{
@@ -52,6 +53,7 @@ const Chart = ({ data, country }) => {
     };
     const barChart = data ? (<Bar data={barData} options={barOption} />) : null;
 
+
     const pieData = {
         labels: ['Infected', 'Recovered', 'Deaths'],
         datasets: [{
@@ -69,6 +71,7 @@ const Chart = ({ data, country }) => {
     };
     const pieChart = data?.confirmed ? (<Pie data={pieData} />) : null;
 
+
     const polarData = {
         datasets: [{
             data: [data?.confirmed?.value, data?.recovered?.value, data?.deaths?.value],
@@ -83,22 +86,21 @@ const Chart = ({ data, country }) => {
     };
     const polarChart = data?.confirmed ? (<Polar data={polarData} />) : null;
 
+
     const handleChartChange = (name) => {
         setChartName(name);
     };
 
     return (
-
         <div className={styles.container}>
             <div className={styles.radio}>
                 <FormControl component="fieldset">
                     <RadioGroup aria-label="gender" name="gender1" row onChange={(e) => handleChartChange(e.target.value)} >
-
                         <FormControlLabel disabled={country ? true : false} value="lineChart" control={<Radio />} label="Line Chart" />
                         <FormControlLabel value="barChart" control={<Radio />} label="Bar Chart" />
                         <FormControlLabel value="polarChart" control={<Radio />} label="Polar Chart" />
                         <FormControlLabel value="pieChart" control={<Radio />} checked={!chartName.localeCompare("pieChart")} label="Pie Chart" />
-
+                        <FormControlLabel value="pieChart" control={<Radio />} checked={!chartName.localeCompare("moreInfo")} label="More Info" />
                     </RadioGroup>
                 </FormControl>
             </div>
