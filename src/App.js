@@ -12,26 +12,17 @@ class App extends React.Component {
     };
 
     handleCountryChange = async (country) => {
-        console.log("$$$          start: HCC           $$$");
         const fetchedData = await fetchData(country);
-        console.log("$$$   mid: HCC stateWillUpdate    $$$");
         this.setState({ data: fetchedData });
-        console.log("$$$   mid: HCC stateWillUpdate    $$$");
         this.setState({ country: country });
-        console.log("$$$          end: HCC             $$$");
     };
 
     async componentDidMount() {
-        console.log("%%%        start: CDM          %%%");
         const fetchedData = await fetchData();
-        console.log("%%%   mid: CDM stateWillUpdate %%%");
         this.setState({ data: fetchedData });
-        console.log("%%%          end: CDM          %%%");
     }
 
     render() {
-        console.log("!!!      App Component rendered      !!!");
-        console.log("!!! Card, CP, Chart will be rendered !!!");
         return (
             <div className={styles.container}>
 

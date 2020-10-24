@@ -6,14 +6,10 @@ import cx from 'classnames';
 
 const Cards = ({ data: { confirmed, recovered, deaths, lastUpdate } }) => {
 
-    console.log("######## Inside Cards Component ########");
-    console.log("== 0: Cards Status: Loading ==");
     if (!confirmed) {
         return 'Loading...';
     }
-    console.log("== 1: Cards Status: Loaded  ==");
 
-    console.log("== 2:     Cards Return      ==");
     return (
         <div className={styles.container}>
             <Grid container spacing={3} justify="center">
