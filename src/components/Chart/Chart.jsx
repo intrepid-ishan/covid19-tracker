@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { fetchDailyData } from '../../api';
+import { fetchDailyData, fetchMoreDataAllCountries, fetchCountries } from '../../api';
 import { Line, Bar, Pie, Polar } from 'react-chartjs-2';
 import styles from './Chart.module.css';
-import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@material-ui/core';
+import { FormControl, FormControlLabel, Radio, RadioGroup } from '@material-ui/core';
+import Table from '../Table/Table.jsx';
 
 const Chart = ({ data, country }) => {
 
     const [dailyData, setDailyData] = useState([]);
     const [chartName, setChartName] = useState('pieChart');
+    const [moreInfo, setMoreInfo] = useState([]);
 
     useEffect(() => {
         const fetchAPI = async () => {
@@ -17,15 +19,17 @@ const Chart = ({ data, country }) => {
         fetchAPI();
     }, []);
 
+    // =======================================================================================
+
     const lineData = {
-        labels: dailyData.map(({ date }) => date),
+        labels: dailyData?.map(({ date }) => date),
         datasets: [{
-            data: dailyData.map(({ confirmed }) => confirmed),
+            data: dailyData?.map(({ confirmed }) => confirmed),
             label: 'Infected',
             borderColor: '#3333ff',
             fill: true,
         }, {
-            data: dailyData.map(({ deaths }) => deaths),
+            data: dailyData?.map(({ deaths }) => deaths),
             label: 'Deaths',
             borderColor: 'red',
             backgroundColor: 'rgba(255,0,0,0.5)',
@@ -86,21 +90,40 @@ const Chart = ({ data, country }) => {
     };
     const polarChart = data?.confirmed ? (<Polar data={polarData} />) : null;
 
+    // =======================================================================================
 
-    const handleChartChange = (name) => {
-        setChartName(name);
+    const tableFormat = () => {
+        return <Table data={moreInfo} />;
     };
+
+    const handleChartChange = async (name) => {
+        if (name.localeCompare("moreInfo")) {
+            console.log(name);
+            setChartName(name);
+        } else {
+            const countries = await fetchCountries();
+            // console.log(countries);
+            // const result = await fetchMoreDataAllCountries(countries);
+            fetchMoreDataAllCountries(countries).then(res => {
+                // console.log("result 1:01", res);
+                setMoreInfo(res);
+                setChartName(name);
+            });
+        }
+    };
+
+    // =======================================================================================
 
     return (
         <div className={styles.container}>
             <div className={styles.radio}>
                 <FormControl component="fieldset">
-                    <RadioGroup aria-label="gender" name="gender1" row onChange={(e) => handleChartChange(e.target.value)} >
-                        <FormControlLabel disabled={country ? true : false} value="lineChart" control={<Radio />} label="Line Chart" />
-                        <FormControlLabel value="barChart" control={<Radio />} label="Bar Chart" />
-                        <FormControlLabel value="polarChart" control={<Radio />} label="Polar Chart" />
-                        <FormControlLabel value="pieChart" control={<Radio />} checked={!chartName.localeCompare("pieChart")} label="Pie Chart" />
-                        <FormControlLabel value="pieChart" control={<Radio />} checked={!chartName.localeCompare("moreInfo")} label="More Info" />
+                    <RadioGroup aria-label="gender" name="gender1" row  >
+                        <FormControlLabel disabled={country ? true : false} value="lineChart" control={<Radio />} label="Line Chart" onChange={(e) => handleChartChange(e.target.value)} />
+                        <FormControlLabel value="barChart" control={<Radio />} label="Bar Chart" onChange={(e) => handleChartChange(e.target.value)} />
+                        <FormControlLabel value="polarChart" control={<Radio />} label="Polar Chart" onChange={(e) => handleChartChange(e.target.value)} />
+                        <FormControlLabel value="pieChart" control={<Radio />} label="Pie Chart" onChange={(e) => handleChartChange(e.target.value)} />
+                        <FormControlLabel value="moreInfo" control={<Radio />} label="More Info" onChange={(e) => handleChartChange(e.target.value)} />
                     </RadioGroup>
                 </FormControl>
             </div>
@@ -108,6 +131,7 @@ const Chart = ({ data, country }) => {
             { chartName.localeCompare("barChart") ? null : barChart}
             { chartName.localeCompare("pieChart") ? null : pieChart}
             { chartName.localeCompare("polarChart") ? null : polarChart}
+            { chartName.localeCompare("moreInfo") ? console.log("moreInfo: null") : tableFormat()}
         </div>
     );
 };
