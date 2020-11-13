@@ -2,23 +2,21 @@ import React from 'react';
 import styles from './Table.module.css';
 
 function Table({ data }) {
-    console.log("Inside Table.jsx", data);
-    let countries = data;
-    console.log("countries 1", countries.length);
+
+    // console.log("Inside Table Component: tableData", data);
+    // const arr = [1, 2, 3, 4];
+    // arr.map((item) => (console.log(item)));
+    // console.log("Inside Table Component: tableData", typeof (data));
 
     return (
         <div className={styles.table}>
-            {console.log("countries 2", countries.length)}
-            {countries.map((country) => (console.log(country.countryName)))}
-            {/* 
             <tr>
-                    <td>Hello</td>
-                    <td>
-                        {console.log("okay")};
+                <td>Hello</td>
+                <td>
+                    {console.log("working")};
                     </td>
-                </tr> 
-            */}
-        </div>
+            </tr>
+        </div >
     );
 }
 

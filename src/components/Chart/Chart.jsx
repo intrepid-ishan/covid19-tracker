@@ -9,7 +9,7 @@ const Chart = ({ data, country }) => {
 
     const [dailyData, setDailyData] = useState([]);
     const [chartName, setChartName] = useState('pieChart');
-    const [moreInfo, setMoreInfo] = useState([]);
+    const [tableData, setTableData] = useState([]);
 
     useEffect(() => {
         const fetchAPI = async () => {
@@ -38,7 +38,6 @@ const Chart = ({ data, country }) => {
     };
     const lineChart = dailyData.length ? (<Line data={lineData} />) : null;
 
-
     const barData = {
         labels: ['Infected', 'Recovered', 'Deaths'],
         datasets: [{
@@ -57,7 +56,6 @@ const Chart = ({ data, country }) => {
     };
     const barChart = data ? (<Bar data={barData} options={barOption} />) : null;
 
-
     const pieData = {
         labels: ['Infected', 'Recovered', 'Deaths'],
         datasets: [{
@@ -74,7 +72,6 @@ const Chart = ({ data, country }) => {
         }]
     };
     const pieChart = data?.confirmed ? (<Pie data={pieData} />) : null;
-
 
     const polarData = {
         datasets: [{
@@ -93,7 +90,8 @@ const Chart = ({ data, country }) => {
     // =======================================================================================
 
     const tableFormat = () => {
-        return <Table data={moreInfo} />;
+        console.log("tableFormat: tableData", tableData.length);
+        return <Table data={tableData} />;
     };
 
     const handleChartChange = async (name) => {
@@ -102,13 +100,11 @@ const Chart = ({ data, country }) => {
             setChartName(name);
         } else {
             const countries = await fetchCountries();
-            // console.log(countries);
-            // const result = await fetchMoreDataAllCountries(countries);
-            fetchMoreDataAllCountries(countries).then(res => {
-                // console.log("result 1:01", res);
-                setMoreInfo(res);
-                setChartName(name);
-            });
+            console.log("handleChartChange: countries", countries);
+            const tableData = await fetchMoreDataAllCountries(countries);
+            console.log("handleChartChange: tableData", tableData);
+            setTableData(tableData);
+            setChartName(name);
         }
     };
 
