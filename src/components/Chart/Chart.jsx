@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { fetchDailyData, fetchMoreDataAllCountries, fetchCountries } from '../../api';
+import { fetchDailyData, fetchCustomData, fetchCountries } from '../../api';
 import { Line, Bar, Pie, Polar } from 'react-chartjs-2';
 import styles from './Chart.module.css';
 import { FormControl, FormControlLabel, Radio, RadioGroup } from '@material-ui/core';
-import Table from '../Table/Table.jsx';
+import Table from './Table/Table.jsx';
 
 const Chart = ({ data, country }) => {
 
@@ -19,7 +19,6 @@ const Chart = ({ data, country }) => {
         fetchAPI();
     }, []);
 
-    // =======================================================================================
 
     const lineData = {
         labels: dailyData?.map(({ date }) => date),
@@ -87,28 +86,22 @@ const Chart = ({ data, country }) => {
     };
     const polarChart = data?.confirmed ? (<Polar data={polarData} />) : null;
 
-    // =======================================================================================
-
-    const tableFormat = () => {
-        console.log("tableFormat: tableData", tableData.length);
-        return <Table data={tableData} />;
-    };
-
     const handleChartChange = async (name) => {
-        if (name.localeCompare("moreInfo")) {
-            console.log(name);
+        if (name.localeCompare("table")) {
             setChartName(name);
         } else {
             const countries = await fetchCountries();
-            console.log("handleChartChange: countries", countries);
-            const tableData = await fetchMoreDataAllCountries(countries);
-            console.log("handleChartChange: tableData", tableData);
-            setTableData(tableData);
+            fetchCustomData(countries)
+                .then((result) => {
+                    console.log("result", result); //190 - 😀
+                    setTableData(result);
+                })
+                .catch(() => {
+                    console.log("error");
+                });
             setChartName(name);
         }
     };
-
-    // =======================================================================================
 
     return (
         <div className={styles.container}>
@@ -119,7 +112,7 @@ const Chart = ({ data, country }) => {
                         <FormControlLabel value="barChart" control={<Radio />} label="Bar Chart" onChange={(e) => handleChartChange(e.target.value)} />
                         <FormControlLabel value="polarChart" control={<Radio />} label="Polar Chart" onChange={(e) => handleChartChange(e.target.value)} />
                         <FormControlLabel value="pieChart" control={<Radio />} label="Pie Chart" onChange={(e) => handleChartChange(e.target.value)} />
-                        <FormControlLabel value="moreInfo" control={<Radio />} label="More Info" onChange={(e) => handleChartChange(e.target.value)} />
+                        <FormControlLabel disabled={country ? true : false} value="table" control={<Radio />} label="Table" onChange={(e) => handleChartChange(e.target.value)} />
                     </RadioGroup>
                 </FormControl>
             </div>
@@ -127,7 +120,7 @@ const Chart = ({ data, country }) => {
             { chartName.localeCompare("barChart") ? null : barChart}
             { chartName.localeCompare("pieChart") ? null : pieChart}
             { chartName.localeCompare("polarChart") ? null : polarChart}
-            { chartName.localeCompare("moreInfo") ? console.log("moreInfo: null") : tableFormat()}
+            { chartName.localeCompare("table") ? null : <Table data={tableData} />}
         </div>
     );
 };

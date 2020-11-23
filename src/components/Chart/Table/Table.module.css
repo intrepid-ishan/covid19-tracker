@@ -1,0 +1,63 @@
+.table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  margin-top: 20px;
+  height: 400px;
+  width: max-content;
+  align-self: center;
+  overflow: scroll;
+}
+
+.table td,
+.table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.srNo {
+  background-color: rgba(207, 221, 13, 0.3);
+  color: rgb(39, 38, 38);
+}
+
+.country {
+  background-color: rgb(20, 20, 20, 0.3);
+  color: rgb(39, 38, 38);
+}
+
+.infected {
+  background-color: rgba(0, 0, 255, 0.3);
+  color: rgb(39, 38, 38);
+}
+
+.infected:hover {
+  background-color: rgba(0, 0, 255, 0.5);
+  color: rgb(39, 38, 38);
+  cursor: pointer;
+}
+
+.recovered {
+  background-color: rgba(0, 255, 0, 0.3);
+  color: rgb(39, 38, 38);
+}
+
+.recovered:hover {
+  background-color: rgba(0, 255, 0, 0.5);
+  color: rgb(39, 38, 38);
+  cursor: pointer;
+}
+
+.deaths {
+  background-color: rgba(255, 0, 0, 0.3);
+  color: rgb(39, 38, 38);
+}
+
+.deaths:hover {
+  background-color: rgba(255, 0, 0, 0.5);
+  color: rgb(39, 38, 38);
+  cursor: pointer;
+}

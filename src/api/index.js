@@ -51,27 +51,25 @@ export const fetchCountries = async () => {
     }
 };
 
+export const fetchCustomData = async (countries) => {
 
-export const fetchMoreDataAllCountries = async (countries) => {
-    let modifiedDataArray = [];
+    const filteredCountries = countries.filter(country => country !== "Gambia");
 
-    console.log("fetchMoreDataAllCountries: countries.length", countries.length);
+    return new Promise((resolve, reject) => {//start promise
 
-    countries.map(async country => {
-        const req = await axios.get(`${url}/countries/${country}`);
+        const myPromises = filteredCountries.map(async country => {
+            const req = await axios.get(`${url}/countries/${country}`);
+            const { data: { confirmed, deaths, recovered } } = req;
+            return {
+                countryName: country,
+                confirmed: confirmed.value,
+                recovered: deaths.value,
+                deaths: recovered.value,
+            };
+        });
 
-        const { data: { confirmed, deaths, recovered } } = req;
-        let b = {
-            countryName: country,
-            confirmed: confirmed.value,
-            recovered: deaths.value,
-            deaths: recovered.value,
-        };
-        modifiedDataArray.push(b);
-        // console.log(modifiedDataArray);
-    });
+        const result = Promise.all(myPromises);
+        resolve(result);
 
-    console.log("fetchMoreDataAllCountries: modifiedDataArray", modifiedDataArray.length);
-    return modifiedDataArray;
+    });//end promise
 };
-
